@@ -29,5 +29,9 @@ namespace CloudPrinter.Models
         {
             return new ApplicationDbContext();
         }
+
+        public System.Data.Entity.DbSet<CloudPrinter.Models.UserModels> UserModels { get; set; }
+
+        public System.Data.Entity.DbSet<CloudPrinter.Models.PrinterModels> PrinterModels { get; set; }
     }
 }

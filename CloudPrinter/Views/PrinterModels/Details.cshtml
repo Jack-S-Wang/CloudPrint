@@ -1,0 +1,66 @@
+﻿@model CloudPrinter.Models.PrinterModels
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>PrinterModels</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.userId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.userId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.printerName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.printerName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mState)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mState)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.cState)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.cState)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.stateMessage)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.stateMessage)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.userName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.userName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.PrinterModelsId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

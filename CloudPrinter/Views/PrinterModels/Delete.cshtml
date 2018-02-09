@@ -1,0 +1,71 @@
+﻿@model CloudPrinter.Models.PrinterModels
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>PrinterModels</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.userId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.userId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.printerName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.printerName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mState)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mState)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.cState)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.cState)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.stateMessage)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.stateMessage)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.userName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.userName)
+        </dd>
+
+    </dl>
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="删除" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

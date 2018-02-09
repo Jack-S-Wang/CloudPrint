@@ -1,5 +1,8 @@
 ﻿using Microsoft.Owin;
 using Owin;
+using CloudPrinter.Migrations;
+using CloudPrinter.Models;
+using System.Data.Entity;
 
 [assembly: OwinStartupAttribute(typeof(CloudPrinter.Startup))]
 namespace CloudPrinter
@@ -8,6 +11,7 @@ namespace CloudPrinter
     {
         public void Configuration(IAppBuilder app)
         {
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>());
             ConfigureAuth(app);
         }
     }

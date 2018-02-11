@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<CloudPrinter.Models.PrinterModels>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "云打印主页";
 }
 
-<h2>Index</h2>
+<h2>云打印应用程序</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("注册新打印机", "Create")
 </p>
 <table class="table">
     <tr>
@@ -59,9 +59,9 @@
             @Html.DisplayFor(modelItem=>item.registerTime)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.PrinterModelsId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.PrinterModelsId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.PrinterModelsId })
+            @Html.ActionLink("编辑", "Edit", new { id=item.PrinterModelsId }) |
+            @Html.ActionLink("预览", "Details", new { id=item.PrinterModelsId }) |
+            @Html.ActionLink("删除", "Delete", new { id=item.PrinterModelsId })
         </td>
     </tr>
 }

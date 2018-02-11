@@ -13,5 +13,10 @@ namespace CloudPrinter.Controllers
         {
             return View();
         }
+        [HttpPost,ActionName("LoginIn")]
+        public ActionResult LoginIn()
+        {
+            return RedirectToAction("Index", "PrinterModels");
+        }
     }
 }

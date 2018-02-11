@@ -2,7 +2,12 @@
 @{
     ViewBag.Title = "登录";
 }
+
 <style type="text/css">
+    //前端网页例子https://v3.bootcss.com/javascript/#modals #header {
+        display: none;
+    }
+
     body {
         padding-top: 40px;
         padding-bottom: 40px;
@@ -35,20 +40,40 @@
             margin-bottom: 15px;
             padding: 7px 9px;
         }
-        .alert{
-             padding-top: 100px;
-            
-        }
+
+    .alert {
+        padding-top: 100px;
+        padding-bottom: 100px;
+        background-image: url("/Resources/634d38441d07819d24f4e6d6ea5bff64.png");
+    }
+
+    .Login-font {
+        font-size: 20px;
+        color: #00ffff;
+    }
+
+    #login-body {
+        padding-top: 30px;
+    }
 </style>
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="Login-font">
+            得实仿真型打印机登录界面
+        </div>
+    </div>
+</div>
 <div class="alert">
-    <form class="form-signin">
+    <form class="form-signin" action="/UserLogin/LoginIn" method="post">
         <h1 class="form-signin-heading">登录用户</h1>
-        <input type="text" id="userName" title="用户名" placeholder="userName"/>
-        <input type="password" id="password" titie="密码" placeholder="password"/>
-        <label class="checkbox">
-            <input type="checkbox" value="记住账户"> 记住账户
-        </label>
-        <button class="btn btn-large btn-primary" type="submit">登录</button>
+        <input type="text" id="userName" title="用户名" placeholder="userName" />
+        <input type="password" id="password" titie="密码" placeholder="password" />
+        <div class="checkbox">
+            <input type="checkbox" value="记住密码"> 记住密码
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            @Html.ActionLink("注册用户", "registerUser", "UserLogin")
+        </div>
+        <input type="submit" value="登录" />
     </form>
 </div>
 

@@ -16,36 +16,57 @@
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        <li>@Html.ActionLink("注册", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
         <li style="padding:15px;">
-            <button class="loginLink" data-target="#n" data-toggle="modal">登录</button>
+            <button class="link" onmouseover="this.className='over'" onmouseout="this.className='out'">注册</button>
+        </li>
+        <li style="padding:15px;">
+            <button class="link" data-target="#n" data-toggle="modal" onmouseover="this.className='over'" onmouseout="this.className='out'">登录</button>
         </li>
     </ul>
+    <form action="/UserLogin/LoginIn" method="post">
     <div class="modal fade" tabindex="-1" role="dialog" id="n">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Modal title</h4>
+                    <h4 class="modal-title">登录账户</h4>
                 </div>
                 <div class="modal-body">
-                    <p>One fine body&hellip;</p>
+                    <p>
+                        用户名：<input type="text" id="userName" title="用户名" placeholder="userName" /><br />
+                        密&nbsp;&nbsp;&nbsp;&nbsp;码：<input type="password" id="password" titie="密码" placeholder="password" />
+                    </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary">登录</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+        </form>
     <style>
         .modal-backdrop {
             z-index: -1;
         }
 
-        .loginLink {
+        .link {
             text-align: center;
-            background-color: #000000;
+            background-color: #101010;
+            color: #808080;
+            border: hidden;
+        }
+
+        .over {
+            background-color: #101010;
+            text-align: center;
+            color: #ffffff;
+            border: hidden;
+        }
+
+        .out {
+            background-color: #101010;
+            text-align: center;
             color: #808080;
             border: hidden;
         }

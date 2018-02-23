@@ -34,7 +34,7 @@ namespace CloudPrinter.Controllers
                 //var um = query.First();
 
                 UserModels um=db.UserModels.SqlQuery("select * from dbo.UserModels where userName=@userName",new SqlParameter("@userName",userName)).First();
-                //db.Database.Log = Console.Write(true);
+                db.Database.Log = Console.WriteLine;
                 if (um != null)
                 {
                     if (password.Equals(um.password))
@@ -55,7 +55,11 @@ namespace CloudPrinter.Controllers
             {
                 return HttpNotFound("No User");
             }
-            
+        }
+        [HttpPost]
+       public ActionResult Registe()
+        {
+            return RedirectToAction("Create", "UserModels");
         }
     }
 }

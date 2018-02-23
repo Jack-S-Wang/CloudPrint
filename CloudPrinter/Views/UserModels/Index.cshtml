@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<CloudPrinter.Models.UserModels>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "主界面";
 }
 
-<h2>Index</h2>
+<h2>账户主页面</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("创建新账户", "Create")
 </p>
 <table class="table">
     <tr>
@@ -15,10 +15,16 @@
             @Html.DisplayNameFor(model => model.userName)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.password)
         </th>
         <th>
-            @Html.DisplayNameFor(model=>model.registerDate)
+            @Html.DisplayNameFor(model => model.registerDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RememberMe)
         </th>
         <th></th>
     </tr>
@@ -29,15 +35,21 @@
             @Html.DisplayFor(modelItem => item.userName)
         </td>
         <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
             @Html.DisplayFor(modelItem => item.password)
         </td>
         <td>
-            @Html.DisplayFor(modelItem=>item.registerDate)
+            @Html.DisplayFor(modelItem => item.registerDate)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.UserModelsId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.UserModelsId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.UserModelsId })
+            @Html.DisplayFor(modelItem => item.RememberMe)
+        </td>
+        <td>
+            @Html.ActionLink("编辑", "Edit", new { id=item.UserModelsId }) |
+            @Html.ActionLink("信息", "Details", new { id=item.UserModelsId }) |
+            @Html.ActionLink("删除", "Delete", new { id=item.UserModelsId })
         </td>
     </tr>
 }

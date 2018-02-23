@@ -46,10 +46,10 @@ namespace CloudPrinter.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "UserModelsId,userName,password")] UserModels userModels)
+        public ActionResult Create([Bind(Include = "UserModelsId,userName,Name,password")] UserModels userModels)
         {
             userModels.registerDate = DateTime.Now;
-
+            userModels.RememberMe = false;
             if (ModelState.IsValid)
             {
                 db.UserModels.Add(userModels);
@@ -80,7 +80,7 @@ namespace CloudPrinter.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "UserModelsId,userName,password")] UserModels userModels)
+        public ActionResult Edit([Bind(Include = "UserModelsId,userName,Name,password,registerDate,RememberMe")] UserModels userModels)
         {
             if (ModelState.IsValid)
             {

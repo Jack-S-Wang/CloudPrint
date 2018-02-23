@@ -17,6 +17,10 @@ namespace CloudPrinter.Models
         [Display(Name ="账号")]
         public virtual string userName { get; set; }
 
+        [StringLength(64)]
+        [Display(Name ="用户名")]
+        public virtual string Name { get; set; }
+
         [Required]
         [StringLength(13)]
         [DataType(DataType.Password)]
@@ -27,5 +31,8 @@ namespace CloudPrinter.Models
         [DataType(DataType.DateTime)]
         [Display(Name = "注册时间")]
         public virtual DateTime registerDate { get; set; }
+
+        [Required]
+        public virtual bool RememberMe { get; set; }
     }
 }

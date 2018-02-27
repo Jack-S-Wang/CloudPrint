@@ -14,20 +14,27 @@ namespace CloudPrinter.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: PrinterModels
-        public ActionResult Index()
+        // GET: PrinterModels/5
+        public ActionResult Index(string userAccount)
         {
+            if (userAccount == null || userAccount=="")
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "no find Account");
+            }
+            ViewBag.superAccount = superAdmin.AdminInfo.ADMINACCOUNT;
+            ViewBag.userAccount = userAccount;
             return View(db.PrinterModels.ToList());
         }
 
         // GET: PrinterModels/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(string printerNumber)
         {
-            if (id == null)
+            
+            if (printerNumber==null || printerNumber=="")
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "no find Device");
             }
-            PrinterModels printerModels = db.PrinterModels.Find(id);
+            PrinterModels printerModels = db.PrinterModels.Find(printerNumber);
             if (printerModels == null)
             {
                 return HttpNotFound();
@@ -35,9 +42,14 @@ namespace CloudPrinter.Controllers
             return View(printerModels);
         }
 
-        // GET: PrinterModels/Create
-        public ActionResult Create()
+        // GET: PrinterModels/Create/5
+        public ActionResult Create(string userAccount)
         {
+            if (userAccount == null || userAccount=="")
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "no find Account");
+            }
+            ViewBag.userAccount = userAccount;
             return View();
         }
 
@@ -46,27 +58,32 @@ namespace CloudPrinter.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "PrinterModelsId,userId,printerName,mState,cState,stateMessage,userName")] PrinterModels printerModels)
+        public ActionResult Create([Bind(Include = "userAccount,printerNumber,printerName")] PrinterModels printerModels)
         {
+            ModelState.Remove("cState");
+            printerModels.cState = "ready";
+            printerModels.stateMessage = "就绪";
+            var umodel = db.UserModels.Find(printerModels.userAccount);
+            printerModels.userName = umodel.Name;
             printerModels.registerTime = DateTime.Now;
             if (ModelState.IsValid)
             {
                 db.PrinterModels.Add(printerModels);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index",new { userAccount=printerModels.userAccount});
             }
 
             return View(printerModels);
         }
 
         // GET: PrinterModels/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(string printerNumber)
         {
-            if (id == null)
+            if (printerNumber == null || printerNumber=="")
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "no find Device");
             }
-            PrinterModels printerModels = db.PrinterModels.Find(id);
+            PrinterModels printerModels = db.PrinterModels.Find(printerNumber);
             if (printerModels == null)
             {
                 return HttpNotFound();
@@ -79,25 +96,25 @@ namespace CloudPrinter.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "PrinterModelsId,userId,printerName,mState,cState,stateMessage,userName")] PrinterModels printerModels)
+        public ActionResult Edit([Bind(Include = "printerNumber,userAccount,printerName,mState,cState,stateMessage,userName")] PrinterModels printerModels)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(printerModels).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index",new { userAccount=printerModels.userAccount});
             }
             return View(printerModels);
         }
 
         // GET: PrinterModels/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(string printerNumber)
         {
-            if (id == null)
+            if (printerNumber == null || printerNumber=="")
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "no find Device");
             }
-            PrinterModels printerModels = db.PrinterModels.Find(id);
+            PrinterModels printerModels = db.PrinterModels.Find(printerNumber);
             if (printerModels == null)
             {
                 return HttpNotFound();
@@ -108,12 +125,13 @@ namespace CloudPrinter.Controllers
         // POST: PrinterModels/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(string printerNumber)
         {
-            PrinterModels printerModels = db.PrinterModels.Find(id);
+            PrinterModels printerModels = db.PrinterModels.Find(printerNumber);
+            var userAccount = printerModels.userAccount;
             db.PrinterModels.Remove(printerModels);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index",new { userAccount=userAccount});
         }
 
         protected override void Dispose(bool disposing)

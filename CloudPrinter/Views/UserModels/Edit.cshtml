@@ -1,26 +1,25 @@
 ﻿@model CloudPrinter.Models.UserModels
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "编辑账户信息";
 }
 
-<h2>Edit</h2>
+<h2>编辑</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>UserModels</h4>
+        <h4>账户信息</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.UserModelsId)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.userName, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.userAccount, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.userName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.userName, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.userAccount, new { htmlAttributes = new { @class = "form-control",@readonly=true } })
+                @Html.ValidationMessageFor(model => model.userAccount, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -49,23 +48,9 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.RememberMe, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.RememberMe)
-                    @Html.ValidationMessageFor(model => model.RememberMe, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="保存" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>

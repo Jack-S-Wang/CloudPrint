@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using CloudPrinter.Models;
+using System.Collections.Concurrent;
 
 namespace CloudPrinter.Controllers
 {
@@ -21,13 +22,13 @@ namespace CloudPrinter.Controllers
         }
 
         // GET: UserModels/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(string userAccount)
         {
-            if (id == null)
+            if (userAccount == null || userAccount=="")
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "no find Account");
             }
-            UserModels userModels = db.UserModels.Find(id);
+            UserModels userModels = db.UserModels.Find(userAccount);
             if (userModels == null)
             {
                 return HttpNotFound();
@@ -46,28 +47,28 @@ namespace CloudPrinter.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "UserModelsId,userName,Name,password")] UserModels userModels)
+        public ActionResult Create([Bind(Include = "userAccount,Name,password")] UserModels userModels, string referrer)
         {
-            userModels.registerDate = DateTime.Now;
-            userModels.RememberMe = false;
             if (ModelState.IsValid)
             {
+                userModels.registerDate = DateTime.Now;
+                userModels.RememberMe = false;
                 db.UserModels.Add(userModels);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return Redirect(referrer);
             }
-
-            return View(userModels);
+            ModelState.AddModelError("", "创建账户失败！");
+            return View();
         }
 
         // GET: UserModels/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(string userAccount)
         {
-            if (id == null)
+            if (userAccount == null || userAccount=="")
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "no find Account");
             }
-            UserModels userModels = db.UserModels.Find(id);
+            UserModels userModels = db.UserModels.Find(userAccount);
             if (userModels == null)
             {
                 return HttpNotFound();
@@ -80,7 +81,7 @@ namespace CloudPrinter.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "UserModelsId,userName,Name,password,registerDate,RememberMe")] UserModels userModels)
+        public ActionResult Edit([Bind(Include = "userAccount,Name,password,registerDate,RememberMe")] UserModels userModels)
         {
             if (ModelState.IsValid)
             {
@@ -92,13 +93,13 @@ namespace CloudPrinter.Controllers
         }
 
         // GET: UserModels/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(string userAccount)
         {
-            if (id == null)
+            if (userAccount == null || userAccount=="")
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "no find Account");
             }
-            UserModels userModels = db.UserModels.Find(id);
+            UserModels userModels = db.UserModels.Find(userAccount);
             if (userModels == null)
             {
                 return HttpNotFound();
@@ -109,9 +110,9 @@ namespace CloudPrinter.Controllers
         // POST: UserModels/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(string userAccount)
         {
-            UserModels userModels = db.UserModels.Find(id);
+            UserModels userModels = db.UserModels.Find(userAccount);
             db.UserModels.Remove(userModels);
             db.SaveChanges();
             return RedirectToAction("Index");

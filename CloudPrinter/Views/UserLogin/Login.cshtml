@@ -67,12 +67,36 @@
 <div class="alert">
     <form class="form-signin" action="/UserLogin/LoginIn" method="post">
         <h1 class="form-signin-heading">登录用户</h1>
-            <input type="text" id="userName" title="用户名" placeholder="userName" name="userName" />
+        @if (Model != null)
+        {
+            var name = Model.userAccount;
+            var password = Model.password;
+            var Ischeck = Model.RememberMe;
+            if (Ischeck)
+            {
+                <input type="text" id="userName" title="用户名" placeholder="userName" name="userAccount" value="@name" />
+                <input type="password" id="password" titie="密码" placeholder="password" name="password" value="@password"/>
+                <div class="checkbox">
+                    <input type="checkbox" name="remember" checked="checked"/>记住
+                </div>
+            }
+            else
+            {
+                <input type="text" id="userName" title="用户名" placeholder="userName" name="userAccount" />
+                <input type="password" id="password" titie="密码" placeholder="password" name="password" />
+                <div class="checkbox">
+                    <input type="checkbox" name="remember" />记住
+                </div>
+            }
+        }
+        else
+        {
+            <input type="text" id="userName" title="用户名" placeholder="userName" name="userAccount" />
             <input type="password" id="password" titie="密码" placeholder="password" name="password" />
             <div class="checkbox">
-                @Html.CheckBoxFor(m => m.RememberMe)
-                @Html.LabelFor(m => m.RememberMe,"记住")
+                <input type="checkbox" name="remember" />记住
             </div>
+        }
         <div class="checkbox">
             @Html.ActionLink("注册用户", "Create", "UserModels")
         </div>

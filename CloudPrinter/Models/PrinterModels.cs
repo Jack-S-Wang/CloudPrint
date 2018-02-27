@@ -4,15 +4,21 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.Design;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CloudPrinter.Models
 {
     public class PrinterModels
     {
-        public virtual int PrinterModelsId { get; set; }
         [Required()]
         [Display(Name ="用户ID")]
-        public virtual int userId { get; set; }
+        public virtual string userAccount { get; set; }
+
+        [Required]
+        [StringLength(20)]
+        [Key]
+        [Display(Name ="设备注册号")]
+        public virtual string printerNumber { get; set; }
         [StringLength(50)]
         [Display(Name ="打印机名称")]
         public virtual string printerName { get; set; }

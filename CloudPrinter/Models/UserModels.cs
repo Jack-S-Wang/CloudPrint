@@ -9,13 +9,13 @@ namespace CloudPrinter.Models
 {
     public class UserModels
     {
-        public virtual int UserModelsId { get; set; }
-
         [Required]
-        [StringLength(64)]
-        [Index(IsUnique =true)]
+        //[StringLength(64)]
+        [Key]
+        [DataType(DataType.EmailAddress)]
+        //[Index(IsUnique =true)]
         [Display(Name ="账号")]
-        public virtual string userName { get; set; }
+        public virtual string userAccount { get; set; }
 
         [StringLength(64)]
         [Display(Name ="用户名")]
@@ -33,6 +33,7 @@ namespace CloudPrinter.Models
         public virtual DateTime registerDate { get; set; }
 
         [Required]
+        [Display(Name="账号密码记住状态")]
         public virtual bool RememberMe { get; set; }
     }
 }

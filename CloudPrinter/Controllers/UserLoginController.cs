@@ -1,9 +1,14 @@
 ﻿using CloudPrinter.Models;
+using CloudPrinter.superAdmin;
+using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using System.Web;
+using System.Web.Caching;
 using System.Web.Mvc;
 
 namespace CloudPrinter.Controllers
@@ -12,52 +17,91 @@ namespace CloudPrinter.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-
         // GET: UserLogin
         public ActionResult Login()
         {
+            var cookie = Request.Cookies.Get("name");
+            if (cookie != null)
+            {
+                var um = db.UserModels.Find(cookie.Value);
+                if (um != null)
+                {
+                    return View(um);
+                }
+            }
             return View();
         }
         [HttpPost, ActionName("LoginIn")]
-        public ActionResult LoginIn(FormCollection collection)
+        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Client, NoStore = false, Duration = 30)]
+        public ActionResult LoginIn([Bind(Include ="userAccount,password")] UserModels userModels,string remember)
         {
-            string userName = collection["userName"];
-            string password = collection["password"];
-            if (userName != "")
+            if (ModelState.IsValid)
             {
-                //var query = from u in db.UserModels
-                //            where u.userName.Equals(userName)
-                //            select u;
-
-                //var queryString = query.ToString();
-
-                //var um = query.First();
-
-                UserModels um=db.UserModels.SqlQuery("select * from dbo.UserModels where userName=@userName",new SqlParameter("@userName",userName)).First();
-                db.Database.Log = Console.WriteLine;
+                bool remb = false;
+                if (remember != null)
+                {
+                    remb = true;
+                }
+                var um = db.UserModels.Find(userModels.userAccount);
                 if (um != null)
                 {
-                    if (password.Equals(um.password))
+                    if (um.password.Equals(userModels.password))
                     {
-                        return RedirectToAction("Index", "PrinterModels",um.UserModelsId);
+                        um.RememberMe = remb;
+                        db.Entry(um).State = System.Data.Entity.EntityState.Modified;
+                        db.SaveChanges();
+                        HttpCookie cookie = new HttpCookie("name", userModels.userAccount);
+                        Response.Cookies.Set(cookie);
+                        Response.Cookies["name"].Expires = DateTime.MaxValue;
+                        if (userModels.userAccount.Equals(AdminInfo.ADMINACCOUNT))
+                        {
+                            return RedirectToAction("Index", "UserModels");
+                        }
+                        return RedirectToAction("Index", "PrinterModels", new { userAccount = userModels.userAccount });
                     }
                     else
                     {
-                        return HttpNotFound("Password is worng!");
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest,"password is wrong!");
                     }
-                }
-                else
+                }else
                 {
-                    return HttpNotFound("No User");
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "no find Account！");
                 }
-                
-            }else
-            {
-                return HttpNotFound("No User");
             }
+            //ModelState.AddModelError("error", "无效登录！");
+            return View(userModels);  
+
+            //if (!ModelState.IsValid)
+            //{
+            //    return View(userModels);
+            //}
+
+            //// 这不会计入到为执行帐户锁定而统计的登录失败次数中
+            //// 若要在多次输入错误密码的情况下触发帐户锁定，请更改为 shouldLockout: true
+            //var result = await SignInManager.PasswordSignInAsync(userModels.userAccount, userModels.password, userModels.RememberMe, shouldLockout: true);
+            //switch (result)
+            //{
+            //    case SignInStatus.Success:
+            //        HttpCookie cookie = new HttpCookie("name", userModels.userAccount);
+            //        Response.Cookies.Set(cookie);
+            //        Response.Cookies["name"].Expires = DateTime.MaxValue;
+            //        if (userModels.userAccount.Equals(AdminInfo.ADMINACCOUNT))
+            //        {
+            //            return RedirectToAction("Index", "UserModels");
+            //        }
+            //        return RedirectToAction("Index", "PrinterModels", new { userAccount = userModels.userAccount });
+            //    case SignInStatus.LockedOut:
+            //        return View("Lockout", "Account");
+            //    case SignInStatus.RequiresVerification:
+            //        return RedirectToAction("SendCode", "Account", new { ReturnUrl = Request.UrlReferrer, RememberMe = userModels.RememberMe });
+            //    case SignInStatus.Failure:
+            //    default:
+            //        ModelState.AddModelError("", "无效的登录尝试。");
+            //        return View(userModels);
+            //}
         }
         [HttpPost]
-       public ActionResult Registe()
+        public ActionResult Registe()
         {
             return RedirectToAction("Create", "UserModels");
         }

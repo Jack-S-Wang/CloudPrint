@@ -1,21 +1,21 @@
 ﻿@model CloudPrinter.Models.UserModels
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "账户信息列表";
 }
 
-<h2>Details</h2>
+<h2>信息表</h2>
 
 <div>
-    <h4>UserModels</h4>
+    <h4>账户信息</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.userName)
+            @Html.DisplayNameFor(model => model.userAccount)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.userName)
+            @Html.DisplayFor(model => model.userAccount)
         </dd>
 
         <dt>
@@ -42,17 +42,8 @@
             @Html.DisplayFor(model => model.registerDate)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.RememberMe)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.RememberMe)
-        </dd>
-
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.UserModelsId }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("编辑", "Edit", new { userAccount = Model.userAccount })
 </p>

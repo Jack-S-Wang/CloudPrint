@@ -11,7 +11,7 @@ namespace CloudPrinter
     {
         public void Configuration(IAppBuilder app)
         {
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>());
+            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ApplicationDbContext>());
             ConfigureAuth(app);
         }
     }

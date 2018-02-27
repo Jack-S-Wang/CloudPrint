@@ -1,21 +1,21 @@
 ﻿@model CloudPrinter.Models.PrinterModels
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "打印机信息列表";
 }
 
-<h2>Details</h2>
+<h2>打印机信息表</h2>
 
 <div>
-    <h4>PrinterModels</h4>
+    <h4>打印机信息</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.userId)
+            @Html.DisplayNameFor(model => model.userAccount)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.userId)
+            @Html.DisplayFor(model => model.userAccount)
         </dd>
 
         <dt>
@@ -61,6 +61,5 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.PrinterModelsId }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Edit", "Edit", new { printerNumber = Model.printerNumber })
 </p>

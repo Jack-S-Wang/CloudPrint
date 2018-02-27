@@ -15,7 +15,7 @@
 }
 else
 {
-    @Html.BeginForm("Registe", "UserLogin"){
+    <form action="/UserLogin/Registe" method="post">
         <ul class="nav navbar-nav navbar-right">
             <li style="padding:15px;">
                 <input type="submit" class="link" onmouseover="this.className='over'" onmouseout="this.className='out'" value="注册">
@@ -24,54 +24,55 @@ else
                 <button class="link" data-target="#n" data-toggle="modal" onmouseover="this.className='over'" onmouseout="this.className='out'">登录</button>
             </li>
         </ul>
-    }
+    </form>
 
-    <div class="modal fade" tabindex="-1" role="dialog" id="n">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">登录账户</h4>
-                </div>
-                <form action="/UserLogin/LoginIn" method="post">
-                    <div class="modal-body">
-                        <p>
-                            用户名：<input type="text" id="userName" title="用户名" placeholder="userName" name="userName" /><br />
-                            密&nbsp;&nbsp;&nbsp;&nbsp;码：<input type="password" id="password" titie="密码" placeholder="password" name="password" />
-                        </p>
+        <div class="modal fade" tabindex="-1" role="dialog" id="n">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">登录账户</h4>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <input type="submit" class="btn btn-primary" value="登录">
-                    </div>
-                </form>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-    <style>
-        .modal-backdrop {
-            z-index: -1;
-        }
+                    <form action="/UserLogin/LoginIn" method="post">
+                        <div class="modal-body">
+                            <p>
+                                用户名：<input type="text" id="userName" title="用户名" placeholder="userName" name="userName" /><br />
+                                <br />
+                                密&nbsp;&nbsp;&nbsp;&nbsp;码：<input type="password" id="password" titie="密码" placeholder="password" name="password" />
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <input type="submit" class="btn btn-primary" value="登录">
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+        <style>
+            .modal-backdrop {
+                z-index: -1;
+            }
 
-        .link {
-            text-align: center;
-            background-color: #101010;
-            color: #808080;
-            border: hidden;
-        }
+            .link {
+                text-align: center;
+                background-color: #101010;
+                color: #808080;
+                border: hidden;
+            }
 
-        .over {
-            background-color: #101010;
-            text-align: center;
-            color: #ffffff;
-            border: hidden;
-        }
+            .over {
+                background-color: #101010;
+                text-align: center;
+                color: #ffffff;
+                border: hidden;
+            }
 
-        .out {
-            background-color: #101010;
-            text-align: center;
-            color: #808080;
-            border: hidden;
-        }
-    </style>
+            .out {
+                background-color: #101010;
+                text-align: center;
+                color: #808080;
+                border: hidden;
+            }
+        </style>
 }

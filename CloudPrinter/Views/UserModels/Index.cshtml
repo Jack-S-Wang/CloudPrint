@@ -7,12 +7,13 @@
 <h2>账户主页面</h2>
 
 <p>
-    @Html.ActionLink("创建新账户", "Create")
+    @Html.ActionLink("创建新账户", "Create") |
+    @Html.ActionLink("注册新打印机", "Create","PrinterModels")
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.userName)
+            @Html.DisplayNameFor(model => model.userAccount)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Name)
@@ -32,7 +33,7 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.userName)
+            @Html.DisplayFor(modelItem => item.userAccount)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Name)
@@ -47,9 +48,9 @@
             @Html.DisplayFor(modelItem => item.RememberMe)
         </td>
         <td>
-            @Html.ActionLink("编辑", "Edit", new { id=item.UserModelsId }) |
-            @Html.ActionLink("信息", "Details", new { id=item.UserModelsId }) |
-            @Html.ActionLink("删除", "Delete", new { id=item.UserModelsId })
+            @Html.ActionLink("编辑", "Edit", new { userAccount=item.userAccount }) |
+            @Html.ActionLink("信息", "Details", new { userAccount = item.userAccount }) |
+            @Html.ActionLink("删除", "Delete", new { userAccount = item.userAccount })
         </td>
     </tr>
 }

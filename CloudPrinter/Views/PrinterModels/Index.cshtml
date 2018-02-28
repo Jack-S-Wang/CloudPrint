@@ -5,10 +5,12 @@
 }
 
 <h2>云打印应用程序</h2>
-
-<p>
-    @Html.ActionLink("注册新打印机", "Create", new { userAccount = ViewBag.userAccount })
-</p>
+@if (ViewBag.loginAccount.Equals(ViewBag.superAccount))
+{
+    <p>
+        @Html.ActionLink("注册新打印机", "Create", new { userAccount = ViewBag.userAccount })
+    </p>
+}
 <table class="table">
     <tr>
         <th>
@@ -62,20 +64,12 @@
                     @Html.DisplayFor(modelItem => item.registerTime)
                 </td>
                 <td>
-                    @if (ViewBag.superAccount.Equals(item.userAccount))
+                    @Html.ActionLink("编辑", "Edit", new { printerNumber = item.printerNumber }) |
+                    @Html.ActionLink("信息", "Details", new { printerNumber = item.printerNumber }) |
+                    @if (ViewBag.loginAccount.Equals(ViewBag.superAccount))
                     {
-                        @Html.ActionLink("绑定", "Edit", new { printerNumber = item.printerNumber })
+                        @Html.ActionLink("删除", "Delete", new { printerNumber = item.printerNumber })
                     }
-                    else
-                    {
-                        using (Html.BeginForm("Edit","PrinterModels",new { printerNumber=item.printerNumber,userAccount="",printerName=item.printerName,
-                            mState =item.mState,cState=item.cState,stateMessage=item.stateMessage,userName="" },FormMethod.Post))
-                        {
-                            <input type="submit" value="解绑" />
-                        }
-                    }
-                    | @Html.ActionLink("预览", "Details", new { printerNumber = item.printerNumber }) |
-                    @Html.ActionLink("删除", "Delete", new { printerNumber = item.printerNumber })
                 </td>
             </tr>
         }

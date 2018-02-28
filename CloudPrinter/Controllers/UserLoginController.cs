@@ -53,6 +53,16 @@ namespace CloudPrinter.Controllers
                         HttpCookie cookie = new HttpCookie("name", userModels.userAccount);
                         Response.Cookies.Set(cookie);
                         Response.Cookies["name"].Expires = DateTime.MaxValue;
+                        HttpCookie cookieLogin = new HttpCookie("LoginAccount", userModels.userAccount);
+                        if (Request.Cookies.Get("LoginAccount") != null)
+                        {
+                            Response.Cookies.Set(cookieLogin);
+                        }
+                        else
+                        {
+                            Response.Cookies.Add(cookieLogin);
+                        }
+                        Response.Cookies["LoginAccount"].Expires = DateTime.Now.AddMinutes(1);
                         if (userModels.userAccount.Equals(AdminInfo.ADMINACCOUNT))
                         {
                             return RedirectToAction("Index", "UserModels");

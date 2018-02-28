@@ -24,9 +24,6 @@
         <th>
             @Html.DisplayNameFor(model => model.registerDate)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.RememberMe)
-        </th>
         <th></th>
     </tr>
 
@@ -43,9 +40,6 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.registerDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RememberMe)
         </td>
         <td>
             @Html.ActionLink("编辑", "Edit", new { userAccount=item.userAccount }) |

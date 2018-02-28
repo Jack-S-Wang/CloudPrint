@@ -45,5 +45,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("编辑", "Edit", new { userAccount = Model.userAccount })
+    @Html.ActionLink("编辑", "Edit", new { userAccount = Model.userAccount }) |
+    @Html.ActionLink("查看该用户的设备信息", "index", "PrinterModels", new { userAccount=Model.userAccount})
 </p>

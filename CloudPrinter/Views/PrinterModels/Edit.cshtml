@@ -10,7 +10,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+    @Html.Hidden("cState", Model.cState);
     <div class="form-horizontal">
         <h4>打印机信息</h4>
         <hr />
@@ -19,7 +19,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.printerNumber, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.printerNumber, new { htmlAttributes = new { @class = "form-control", @readonly="true" } })
+                @Html.EditorFor(model => model.printerNumber, new { htmlAttributes = new { @class = "form-control", @readonly=true } })
                 @Html.ValidationMessageFor(model => model.printerNumber, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -32,31 +32,6 @@
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.mState, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.mState)
-                    @Html.ValidationMessageFor(model => model.mState, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.cState, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.cState, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.cState, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.stateMessage, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.stateMessage, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.stateMessage, "", new { @class = "text-danger" })
-            </div>
-        </div>
        
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">

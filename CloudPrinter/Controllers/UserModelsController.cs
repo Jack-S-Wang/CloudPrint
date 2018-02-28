@@ -24,7 +24,7 @@ namespace CloudPrinter.Controllers
         // GET: UserModels/Details/5
         public ActionResult Details(string userAccount)
         {
-            if (userAccount == null || userAccount=="")
+            if (userAccount == null || userAccount == "")
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "no find Account");
             }
@@ -64,7 +64,7 @@ namespace CloudPrinter.Controllers
         // GET: UserModels/Edit/5
         public ActionResult Edit(string userAccount)
         {
-            if (userAccount == null || userAccount=="")
+            if (userAccount == null || userAccount == "")
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "no find Account");
             }
@@ -81,13 +81,22 @@ namespace CloudPrinter.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "userAccount,Name,password,registerDate,RememberMe")] UserModels userModels)
+        public ActionResult Edit([Bind(Include = "userAccount,Name,password")] UserModels userModels)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(userModels).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                var um = db.UserModels.Find(userModels.userAccount);
+                if (um != null)
+                {
+                    um.Name = userModels.Name;
+                    um.password = userModels.password;
+                    db.Entry(userModels).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }else
+                {
+                    return HttpNotFound();
+                }
             }
             return View(userModels);
         }
@@ -95,7 +104,7 @@ namespace CloudPrinter.Controllers
         // GET: UserModels/Delete/5
         public ActionResult Delete(string userAccount)
         {
-            if (userAccount == null || userAccount=="")
+            if (userAccount == null || userAccount == "")
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "no find Account");
             }

@@ -13,7 +13,7 @@ namespace CloudPrinter.Controllers
     public class PrinterModelsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-
+        
         // GET: PrinterModels/5
         public ActionResult Index(string userAccount)
         {
@@ -21,6 +21,12 @@ namespace CloudPrinter.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "no find Account");
             }
+            var result = Request.Cookies.Get("LoginAccount").Value;
+            if(result=="" || result == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Account is Expire");
+            }
+            ViewBag.loginAccount = result;
             ViewBag.superAccount = superAdmin.AdminInfo.ADMINACCOUNT;
             ViewBag.userAccount = userAccount;
             return View(db.PrinterModels.ToList());
@@ -34,6 +40,12 @@ namespace CloudPrinter.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "no find Device");
             }
+            var result = Request.Cookies.Get("LoginAccount").Value;
+            if (result == "" || result == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Account is Expire");
+            }
+            ViewBag.loginAccount = result;
             PrinterModels printerModels = db.PrinterModels.Find(printerNumber);
             if (printerModels == null)
             {
@@ -49,6 +61,12 @@ namespace CloudPrinter.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "no find Account");
             }
+            var result = Request.Cookies.Get("LoginAccount").Value;
+            if (result == "" || result == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Account is Expire");
+            }
+            ViewBag.loginAccount = result;
             ViewBag.userAccount = userAccount;
             return View();
         }
@@ -83,6 +101,12 @@ namespace CloudPrinter.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "no find Device");
             }
+            var result = Request.Cookies.Get("LoginAccount").Value;
+            if (result == "" || result == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Account is Expire");
+            }
+            ViewBag.loginAccount = result;
             PrinterModels printerModels = db.PrinterModels.Find(printerNumber);
             if (printerModels == null)
             {
@@ -96,7 +120,7 @@ namespace CloudPrinter.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "printerNumber,userAccount,printerName,mState,cState,stateMessage,userName")] PrinterModels printerModels)
+        public ActionResult Edit([Bind(Include = "printerNumber,printerName,cState")] PrinterModels printerModels)
         {
             if (ModelState.IsValid)
             {
@@ -114,6 +138,12 @@ namespace CloudPrinter.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "no find Device");
             }
+            var result = Request.Cookies.Get("LoginAccount").Value;
+            if (result == "" || result == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Account is Expire");
+            }
+            ViewBag.loginAccount = result;
             PrinterModels printerModels = db.PrinterModels.Find(printerNumber);
             if (printerModels == null)
             {

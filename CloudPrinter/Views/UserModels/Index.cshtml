@@ -8,7 +8,7 @@
 
 <p>
     @Html.ActionLink("创建新账户", "Create") |
-    @Html.ActionLink("注册新打印机", "Create","PrinterModels")
+    @Html.ActionLink("注册新打印机", "Create","PrinterModels",new { userAccount=ViewBag.loginAccount},"")
 </p>
 <table class="table">
     <tr>

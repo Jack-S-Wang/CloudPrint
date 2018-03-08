@@ -216,8 +216,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SharClass\ValidateCode.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="superAdmin\AdminInfo.cs" />
+    <Compile Include="TCPServer\TcpPrinter.cs" />
+    <Compile Include="TCPServer\tcpServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />

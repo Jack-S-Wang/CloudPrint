@@ -32,8 +32,5 @@ namespace CloudPrinter.Models
         [Display(Name = "注册时间")]
         public virtual DateTime registerDate { get; set; }
 
-        [Required]
-        [Display(Name="账号密码记住状态")]
-        public virtual bool RememberMe { get; set; }
     }
 }

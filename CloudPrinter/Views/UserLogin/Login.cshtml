@@ -4,8 +4,9 @@
     ViewBag.Title = "登录";
 }
 
+@*前端网页例子https://v3.bootcss.com/javascript/*@
 <style type="text/css">
-    //前端网页例子https://v3.bootcss.com/javascript/#modals #header {
+    #modals #header {
         display: none;
     }
 
@@ -34,7 +35,7 @@
             margin-bottom: 10px;
         }
 
-        .form-signin input[type="text"],
+        .form-signin input[type="email"],
         .form-signin input[type="password"] {
             font-size: 16px;
             height: auto;
@@ -67,39 +68,42 @@
 <div class="alert">
     <form class="form-signin" action="/UserLogin/LoginIn" method="post">
         <h1 class="form-signin-heading">登录用户</h1>
-        @if (Model != null)
-        {
-            var name = Model.userAccount;
-            var password = Model.password;
-            var Ischeck = Model.RememberMe;
-            if (Ischeck)
-            {
-                <input type="text" id="userName" title="用户名" placeholder="userName" name="userAccount" value="@name" />
-                <input type="password" id="password" titie="密码" placeholder="password" name="password" value="@password"/>
-                <div class="checkbox">
-                    <input type="checkbox" name="remember" checked="checked"/>记住
-                </div>
-            }
-            else
-            {
-                <input type="text" id="userName" title="用户名" placeholder="userName" name="userAccount" />
-                <input type="password" id="password" titie="密码" placeholder="password" name="password" />
-                <div class="checkbox">
-                    <input type="checkbox" name="remember" />记住
-                </div>
-            }
-        }
-        else
-        {
-            <input type="text" id="userName" title="用户名" placeholder="userName" name="userAccount" />
-            <input type="password" id="password" titie="密码" placeholder="password" name="password" />
-            <div class="checkbox">
-                <input type="checkbox" name="remember" />记住
-            </div>
-        }
-        <div class="checkbox">
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.userAccount, new { htmlAttributes = new { @title = "用户名", @placeholder = "userAccount", @class = "form-signin" } })
+            @Html.ValidationMessageFor(model => model.userAccount, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.password, new { htmlAttributes = new { @title = "密码", @placeholder = "password", @class = "form-signin" } })
+        </div>
+        <div class="col-md-10">
             @Html.ActionLink("注册用户", "Create", "UserModels")
         </div>
-        <input type="submit" value="登录" />
+        <div class="col-md-10">
+            <table style="width:100%;">
+                <tr>
+                    <td style="width:40%">
+                        <input type="text" name="code" style="width:100%" />
+                    </td>
+                    <td style="width:40%">
+                        <img id="vcodeimg" src="/UserLogin/VCode" style="width:100%;height:100%" />
+                    </td>
+                    <td style="width:20%">
+                        <input type="submit" style="cursor: pointer; text-decoration: underline;width:100%;border:hidden" id="nextImg" value="更换">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div style="padding-left:15px">
+            <input type="submit" value="登录" />
+        </div>
     </form>
 </div>
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script>
+    $(function () {
+        $("#nextImg").click(function () {
+            debugger
+            $("#vcodeimg").attr("src", "/UserLogin/VCode?time=" + (new Date).getTime());
+        })
+    })
+</script>

@@ -40,7 +40,15 @@
         </div>
     </div>
 }
-
+@if (ViewBag.loginAccount.Equals(ViewBag.superAccount))
+{
+<div class="form-group">
+    <div class="col-md-offset-2 col-md-10">
+        @Html.ActionLink("绑定","BandPrinter",new { userAccount=Model.userAccount}) |
+        @Html.ActionLink("解绑","OutBandPrinter",new { userAccount=Model.userAccount})
+    </div>
+</div>
+}
 
 
 @section Scripts {

@@ -18,6 +18,12 @@ namespace CloudPrinter.Controllers
         // GET: UserModels
         public ActionResult Index()
         {
+            var result = Request.Cookies.Get("LoginAccount").Value;
+            if (result == "" || result == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Account is Expire");
+            }
+            ViewBag.loginAccount = result;
             return View(db.UserModels.ToList());
         }
 
@@ -28,6 +34,12 @@ namespace CloudPrinter.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "no find Account");
             }
+            var result = Request.Cookies.Get("LoginAccount").Value;
+            if (result == "" || result == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Account is Expire");
+            }
+            ViewBag.loginAccount = result;
             UserModels userModels = db.UserModels.Find(userAccount);
             if (userModels == null)
             {
@@ -47,15 +59,20 @@ namespace CloudPrinter.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "userAccount,Name,password")] UserModels userModels, string referrer)
+        public ActionResult Create([Bind(Include = "userAccount,Name,password")] UserModels userModels, string referrer,string code)
         {
             if (ModelState.IsValid)
             {
-                userModels.registerDate = DateTime.Now;
-                userModels.RememberMe = false;
-                db.UserModels.Add(userModels);
-                db.SaveChanges();
-                return Redirect(referrer);
+                if (Session["vcode"].Equals(code.ToLower()))
+                {
+                    userModels.registerDate = DateTime.Now;
+                    db.UserModels.Add(userModels);
+                    db.SaveChanges();
+                    return Redirect(referrer);
+                }else
+                {
+                    ModelState.AddModelError(string.Empty, "验证码错误");
+                }
             }
             ModelState.AddModelError("", "创建账户失败！");
             return View();
@@ -68,6 +85,12 @@ namespace CloudPrinter.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "no find Account");
             }
+            var result = Request.Cookies.Get("LoginAccount").Value;
+            if (result == "" || result == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Account is Expire");
+            }
+            ViewBag.loginAccount = result;
             UserModels userModels = db.UserModels.Find(userAccount);
             if (userModels == null)
             {
@@ -108,6 +131,12 @@ namespace CloudPrinter.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "no find Account");
             }
+            var result = Request.Cookies.Get("LoginAccount").Value;
+            if (result == "" || result == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Account is Expire");
+            }
+            ViewBag.loginAccount = result;
             UserModels userModels = db.UserModels.Find(userAccount);
             if (userModels == null)
             {

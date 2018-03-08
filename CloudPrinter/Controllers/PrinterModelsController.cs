@@ -107,6 +107,7 @@ namespace CloudPrinter.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Account is Expire");
             }
             ViewBag.loginAccount = result;
+            ViewBag.superAccount= superAdmin.AdminInfo.ADMINACCOUNT;
             PrinterModels printerModels = db.PrinterModels.Find(printerNumber);
             if (printerModels == null)
             {

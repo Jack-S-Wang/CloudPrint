@@ -19,6 +19,7 @@ namespace CloudPrinter.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
         private static tcpServer sertcp=new tcpServer();
+        private static TcpDataPrintServer tcpDataSer=new TcpDataPrintServer();
         // GET: UserLogin
         public ActionResult Login()
         {

@@ -219,6 +219,10 @@
     <Compile Include="SharClass\ValidateCode.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="superAdmin\AdminInfo.cs" />
+    <Compile Include="TCPServer\PrinterWifeData.cs" />
+    <Compile Include="TCPServer\SharData.cs" />
+    <Compile Include="TCPServer\TcpDataPrintServer.cs" />
+    <Compile Include="TCPServer\TcpDataPrint.cs" />
     <Compile Include="TCPServer\TcpPrinter.cs" />
     <Compile Include="TCPServer\tcpServer.cs" />
   </ItemGroup>

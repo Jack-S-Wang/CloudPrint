@@ -38,5 +38,6 @@ namespace CloudPrinter.Models
         public virtual DateTime registerTime { get; set; }
         [Display(Name ="用户名称")]
         public virtual string userName { get; set; }
+       
     }
 }

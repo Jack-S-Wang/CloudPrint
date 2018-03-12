@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using CloudPrinter.Models;
+using CloudPrinter.TCPServer;
 
 namespace CloudPrinter.Controllers
 {
@@ -165,6 +166,25 @@ namespace CloudPrinter.Controllers
             return RedirectToAction("Index",new { userAccount=userAccount});
         }
 
+        [HttpPost]
+        public string printData(string printerNumber)
+        {
+            if (TcpPrinter.dicTcp.ContainsKey(printerNumber))
+            {
+                foreach(var tp in TcpPrinter.dicTcp)
+                {
+                    if (tp.Key.Contains(printerNumber))
+                    {
+                        
+                        break;
+                    }
+                }
+                return "";
+            }else
+            {
+                return "设备已离线！";
+            }
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -11,6 +11,15 @@
         @Html.ActionLink("注册新打印机", "Create", new { userAccount = ViewBag.userAccount })
     </p>
 }
+
+<div>
+    @using (Html.BeginForm("printData","PrinterModels"))
+    {
+        @Html.DisplayNameFor(model=>model.printerNumber)
+        <input type="checkbox" value="设备"/>
+        <input type="submit" value="打印" />
+    }
+</div>
 <table class="table">
     <tr>
         <th>
@@ -70,6 +79,7 @@
                     {
                         @Html.ActionLink("删除", "Delete", new { printerNumber = item.printerNumber })
                     }
+
                 </td>
             </tr>
         }

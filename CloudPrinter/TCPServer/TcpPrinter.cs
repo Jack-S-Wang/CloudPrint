@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -92,21 +93,30 @@ namespace CloudPrinter.TCPServer
 
         private void closeObject()
         {
-            client.Close();
-            stream.Close();
-            stream.Dispose();
-            ti.Enabled = false;
-            ti.Close();
-            ti.Dispose();
-            var printer = pwd.db.PrinterModels.Find(pwd.number);
-            if (printer != null)
+            try
             {
-                printer.mState = false;
+                client.Close();
+                stream.Close();
+                stream.Dispose();
+                ti.Enabled = false;
+                ti.Close();
+                ti.Dispose();
+                var printer = pwd.db.PrinterModels.FindAsync(pwd.number);
+                if (printer != null)
+                {
+                    printer.Result.mState = false;
+                    pwd.db.Entry(printer.Result).State = EntityState.Modified;
+                    pwd.db.SaveChangesAsync();
+                }
+                TcpPrinter tp;
+                dicTcp.TryRemove(pwd.number, out tp);
+                int a;
+                SharData.dicSharData.TryRemove(pwd.number, out a);
             }
-            TcpPrinter tp;
-            dicTcp.TryRemove(pwd.number, out tp);
-            int a;
-            SharData.dicSharData.TryRemove(pwd.number, out a);
+            catch
+            {
+                return;
+            }
         }
 
         /// <summary>
@@ -115,7 +125,13 @@ namespace CloudPrinter.TCPServer
         /// <param name="ar"></param>
         private void WriteCallback(IAsyncResult ar)
         {
-            stream.EndWrite(ar);
+            try{
+                stream.EndWrite(ar);
+            }
+            catch
+            {
+                return;
+            }
         }
 
         /// <summary>
@@ -197,22 +213,29 @@ namespace CloudPrinter.TCPServer
             dataWirte[5] = recice[5];
             dataWirte[6] = recice[6];
             dataWirte[7] = recice[7];
-            dataWirte[11] = (byte)(len << 24);
-            dataWirte[10] = (byte)(len << 16);
-            dataWirte[9] = (byte)(len << 8);
+            dataWirte[11] = (byte)(len >> 24);
+            dataWirte[10] = (byte)(len >> 16);
+            dataWirte[9] = (byte)(len >> 8);
             dataWirte[8] = (byte)len;
             Array.Copy(ConstNumber.suerData, 0, dataWirte, 12, 2);
             //后面结构上的字节都可为零
             dataWirte[20] = (byte)recode;
-            dataWirte[21] = (byte)(recode << 8);
+            dataWirte[21] = (byte)(recode >> 8);
             dataWirte[22] = (byte)(ti.Interval / 1000);
-            dataWirte[23] = (byte)((int)(ti.Interval / 1000) << 8);
+            dataWirte[23] = (byte)((int)(ti.Interval / 1000) >> 8);
             stream.BeginWrite(dataWirte, 0, ConstNumber.SUER_WRITE, WriteCallback, this);
             hreatSend();
             if (recode == 0)//认证成功，开启心跳
             {
                 //存储
                 dicTcp.TryAdd(pwd.number, this);
+                var printer = pwd.db.PrinterModels.FindAsync(pwd.number);
+                if (printer != null)
+                {
+                    printer.Result.mState = true;
+                    pwd.db.Entry(printer.Result).State = EntityState.Modified;
+                    pwd.db.SaveChangesAsync();
+                }
                 ti.Enabled = true;
                 ti.Elapsed += ((o, e) =>
                 {
@@ -225,7 +248,9 @@ namespace CloudPrinter.TCPServer
                 });
             }
         }
-
+        /// <summary>
+        /// 心跳发送
+        /// </summary>
         private void hreatSend()
         {
             byte[] hreatData = new byte[ConstNumber.HREAT_WRITE];
@@ -235,26 +260,27 @@ namespace CloudPrinter.TCPServer
                 int count = 5;
                 Array.Copy(ConstNumber.signData, hreatData, 4);
                 hreatData[4] = (byte)id;
-                hreatData[5] = (byte)(id << 8);
-                hreatData[6] = (byte)(id << 16);
-                hreatData[7] = (byte)(id << 24);
+                hreatData[5] = (byte)(id >> 8);
+                hreatData[6] = (byte)(id >> 16);
+                hreatData[7] = (byte)(id >> 24);
                 hreatData[8] = (byte)count;
-                hreatData[9] = (byte)(count << 8);
-                hreatData[10] = (byte)(count << 16);
-                hreatData[11] = (byte)(count << 24);
+                hreatData[9] = (byte)(count >> 8);
+                hreatData[10] = (byte)(count >> 16);
+                hreatData[11] = (byte)(count >> 24);
                 hreatData[12] = ConstNumber.HREAT_INDEX;
                 hreatData[13] = (byte)i;
                 hreatData[20] = 0x10;
                 hreatData[21] = 0x09;
                 hreatData[22] = 1;
                 hreatData[23] = 1;
-                hreatData[24] = 0x30;
                 if (i == 0)
                 {
+                    hreatData[24] = 0x31;
                     isBeatWife = false;
                 }
                 else
                 {
+                    hreatData[24] = 0x30;
                     isBeatDev = false;
                 }
                 stream.BeginWrite(hreatData, 0, ConstNumber.HREAT_WRITE, WriteCallback, this);
@@ -282,17 +308,21 @@ namespace CloudPrinter.TCPServer
             return recode;
         }
 
-        public void dataPrint(int i)
+        /// <summary>
+        /// 数据打印发送给设备
+        /// </summary>
+        public void dataPrint()
         {
             byte[] data = new byte[ConstNumber.HEADER_LENGTH];
             Array.Copy(ConstNumber.signData, data, 4);
             int id = rd.Next(1000, 5000);
             data[4] = (byte)id;
-            data[5] = (byte)(id << 8);
-            data[6] = (byte)(id << 16);
-            data[7] = (byte)(id << 24);
+            data[5] = (byte)(id >> 8);
+            data[6] = (byte)(id >> 16);
+            data[7] = (byte)(id >> 24);
             data[12] = ConstNumber.PRINT_CREATE;
-            data[13] = (byte)i;
+            data[13] = 0;
+            new TcpDataPrintServer(pwd.number);
             stream.BeginWrite(data, 0, data.Length, WriteCallback, this);
         }
 

@@ -1,14 +1,7 @@
 ﻿using CloudPrinter.Models;
 using CloudPrinter.SharClass;
 using CloudPrinter.superAdmin;
-using CloudPrinter.TCPServer;
-using Microsoft.AspNet.Identity.Owin;
 using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Caching;
 using System.Web.Mvc;
@@ -18,8 +11,7 @@ namespace CloudPrinter.Controllers
     public class UserLoginController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-        private static tcpServer sertcp=new tcpServer();
-        private static TcpDataPrintServer tcpDataSer=new TcpDataPrintServer();
+       
         // GET: UserLogin
         public ActionResult Login()
         {

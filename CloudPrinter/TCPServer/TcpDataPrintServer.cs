@@ -14,9 +14,9 @@ namespace CloudPrinter.TCPServer
         /// 创建一个数据通道
         /// </summary>
 
-        TcpListener tcplist;
+        static TcpListener tcplist;
         TcpClient newClient;
-        public TcpDataPrintServer()
+        public TcpDataPrintServer(string number)
         {
             if (tcplist != null)
             {
@@ -34,7 +34,7 @@ namespace CloudPrinter.TCPServer
                             newClient = tcplist.AcceptTcpClient();
                         if (newClient != null)
                         {
-                            new TcpDataPrint(newClient);
+                            new TcpDataPrint(newClient,number);
                         }
                     }
                     catch (Exception ex)

@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using CloudPrinter.Models;
 using CloudPrinter.TCPServer;
@@ -14,10 +11,11 @@ namespace CloudPrinter.Controllers
     public class PrinterModelsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-        
+      
         // GET: PrinterModels/5
         public ActionResult Index(string userAccount)
         {
+            Response.CacheControl = "no-cache";
             if (userAccount == null || userAccount=="")
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "no find Account");
@@ -166,25 +164,24 @@ namespace CloudPrinter.Controllers
             return RedirectToAction("Index",new { userAccount=userAccount});
         }
 
-        [HttpPost]
-        public string printData(string printerNumber)
+        // GET : PrinterModels/PerUserList/5
+        public ActionResult PerUserList(string userAccount)
         {
-            if (TcpPrinter.dicTcp.ContainsKey(printerNumber))
+            Response.CacheControl = "no-cache";
+            if (userAccount == null || userAccount == "")
             {
-                foreach(var tp in TcpPrinter.dicTcp)
-                {
-                    if (tp.Key.Contains(printerNumber))
-                    {
-                        
-                        break;
-                    }
-                }
-                return "";
-            }else
-            {
-                return "设备已离线！";
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "no find Account");
             }
+            var result = Request.Cookies.Get("LoginAccount").Value;
+            if (result == "" || result == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Account is Expire");
+            }
+            ViewBag.loginAccount = result;
+            ViewBag.userAccount = userAccount;
+            return PartialView(db.PrinterModels.ToList());
         }
+        
         protected override void Dispose(bool disposing)
         {
             if (disposing)

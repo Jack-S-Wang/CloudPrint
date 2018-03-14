@@ -1,6 +1,7 @@
 ﻿using CloudPrinter.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -41,7 +42,7 @@ namespace CloudPrinter.TCPServer
                             }
                             break;
                         case 2:
-                            int cache = (recide[2] >> 24) + (recide[3] >> 16) + (recide[4] >> 8) + recide[5];
+                            int cache = (recide[2] << 24) + (recide[3] << 16) + (recide[4] << 8) + recide[5];
                             break;
                         case 3:
                             for (int j3 = 0; j3 < recide[2]; j3++)
@@ -56,10 +57,10 @@ namespace CloudPrinter.TCPServer
                 {
                     return 2;//信息获取失败
                 }
-                var printer = db.PrinterModels.Find(number);
+                var printer = db.PrinterModels.FindAsync(number);
                 if (printer != null)
                 {
-                    if (printer.mState)
+                    if (printer.Result.mState)
                     {
                         return 3;//已经登录
                     }
@@ -83,24 +84,38 @@ namespace CloudPrinter.TCPServer
         /// 获取消息体内容
         /// </summary>
         /// <param name="data"></param>
-        public void wifeDevState(byte[] data)
+        public bool wifeDevState(byte[] data)
         {
+            bool flge = false;
             if (data[2] != data[4])
             {
                 if (data[20] == 1)
                 {
                     //接受缓存已满
-                    var printer = db.PrinterModels.Find(number);
+                    var printer = db.PrinterModels.FindAsync(number);
                     if (printer != null)
                     {
-                        printer.cState = "error";
-                        printer.stateMessage = "缓存已满";
+                        printer.Result.cState = "error";
+                        printer.Result.stateMessage = "缓存已满";
+                        db.Entry(printer.Result).State = EntityState.Modified;
+                        db.SaveChangesAsync();
+                    }
+                    if (SharData.dicSharData.ContainsKey(number))
+                    {
+                        int a;
+                        SharData.dicSharData.TryRemove(number, out a);
                     }
                 }
                 else
                 {
-                    
-                    printCache = data[21] + (data[22] >> 8) + (data[23] >> 16) + (data[24] >> 24);
+                    printCache = data[21] + (data[22] << 8) + (data[23] << 16) + (data[24] << 24);
+                    if (SharData.dicSharData.ContainsKey(number))
+                    {
+                        int a;
+                        SharData.dicSharData.TryRemove(number, out a);
+                    }
+                    SharData.dicSharData.TryAdd(number, printCache);
+                    flge = true;
                 }
             }
             else//说明只获取一个类型内容
@@ -109,25 +124,43 @@ namespace CloudPrinter.TCPServer
                 {
                     case 0x30:
                         //先不处理
+                        flge = true;
                         break;
                     case 0x31:
                         //获取数据流状态信息
                         if (data[6] == 1)
                         {
                             //接受缓存已满
-                            var printer=db.PrinterModels.Find(number);
+                            var printer=db.PrinterModels.FindAsync(number);
                             if (printer != null)
                             {
-                                printer.cState = "error";
-                                printer.stateMessage = "缓存已满";
+                                printer.Result.cState = "error";
+                                printer.Result.stateMessage = "缓存已满";
+                                db.Entry(printer.Result).State = EntityState.Modified;
+                                db.SaveChangesAsync();
                             }
+                            if (SharData.dicSharData.ContainsKey(number))
+                            {
+                                int a;
+                                SharData.dicSharData.TryRemove(number, out a);
+                            }
+                            flge = false;
                         }else
                         {
-                            printCache = data[7] + (data[8] >> 8) + (data[9] >> 16) + (data[10] >> 24);
+                            printCache = data[10] + (data[9] << 8) + (data[8] << 16) + (data[7] << 24);
+                            if (SharData.dicSharData.ContainsKey(number))
+                            {
+                                int a;
+                                SharData.dicSharData.TryRemove(number, out a);
+                            }
+                            SharData.dicSharData.TryAdd(number, printCache);
+                            flge = true;
                         }
                         break;
                 }
             }
+            return flge;
+
         }
     }
 }

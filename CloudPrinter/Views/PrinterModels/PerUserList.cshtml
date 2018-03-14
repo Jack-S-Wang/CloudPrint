@@ -1,0 +1,65 @@
+﻿@model IEnumerable<CloudPrinter.Models.PrinterModels>
+
+<tr>
+    <th>
+        @Html.DisplayNameFor(model => model.printerNumber)
+    </th>
+    <th>
+        @Html.DisplayNameFor(model => model.printerName)
+    </th>
+    <th>
+        @Html.DisplayNameFor(model => model.mState)
+    </th>
+    <th>
+        @Html.DisplayNameFor(model => model.cState)
+    </th>
+    <th>
+        @Html.DisplayNameFor(model => model.stateMessage)
+    </th>
+    <th>
+        @Html.DisplayNameFor(model => model.userName)
+    </th>
+    <th>
+        @Html.DisplayNameFor(model => model.registerTime)
+    </th>
+    <th></th>
+</tr>
+@foreach (var item in Model)
+{
+    if (ViewBag.userAccount.Equals(item.userAccount))
+    {
+        var number = item.printerNumber;
+        <tr class="printInfo">
+            <td>
+                @Html.DisplayFor(modelItem => item.printerNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.printerName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.mState)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.cState)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.stateMessage)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.userName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.registerTime)
+            </td>
+            <td>
+                @Html.ActionLink("编辑", "Edit", new { printerNumber = item.printerNumber }) |
+                @Html.ActionLink("信息", "Details", new { printerNumber = item.printerNumber }) |
+                @if (ViewBag.loginAccount.Equals(ViewBag.superAccount))
+                {
+                    @Html.ActionLink("删除", "Delete", new { printerNumber = item.printerNumber }) <label>|</label>
+                }
+                <label class="label" onclick="pnumber('@number')" style="color:#428bca;font-size:75%;box-sizing:border-box;" onmouseover="this.className='overLa'" onmouseout="this.className='outLa'">选择打印</label>
+            </td>
+        </tr>
+    }
+}

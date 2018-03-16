@@ -48,18 +48,25 @@ namespace CloudPrinter.TCPServer
         }
         private void closeObject()
         {
-            clientData.Close();
-            streamData.Close();
-            streamData.Dispose();
-            ti.Enabled = false;
-            ti.Close();
-            ti.Dispose();
-            if (SharData.dicByteData.ContainsKey(number))
+            try
             {
-                List<byte> a;
-                SharData.dicByteData.TryRemove(number, out a);
+                clientData.Close();
+                streamData.Close();
+                streamData.Dispose();
+                ti.Enabled = false;
+                ti.Close();
+                ti.Dispose();
+                if (SharData.dicByteData.ContainsKey(number))
+                {
+                    List<byte> a;
+                    SharData.dicByteData.TryRemove(number, out a);
+                }
+                SharData.dicHttp[number].printResult = true;
             }
-            SharData.dicHttp[number].printResult = true;
+            catch
+            {
+                return;
+            }
            
         }
         int dd = 0;
@@ -91,7 +98,14 @@ namespace CloudPrinter.TCPServer
         /// <param name="ar"></param>
         private void WriteCallback(IAsyncResult ar)
         {
-            streamData.EndWrite(ar);
+            try
+            {
+                streamData.EndWrite(ar);
+            }
+            catch
+            {
+                return;
+            }
         }
 
         /// <summary>

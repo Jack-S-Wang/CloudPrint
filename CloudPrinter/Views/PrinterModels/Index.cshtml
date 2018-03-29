@@ -20,9 +20,20 @@
     <input type="button" id="fileImport" value="导入">
     <input type="submit" value="打印" id="print" />
 </div>
-<table class="table">
+<table class="table" id="ptable">
 
     @Html.Partial("PerUserList")
+   
+</table>
+<table class="table">
+    <tr>
+        <td>
+            <input type="button" value="上一页" id="upTo" />
+        </td>
+        <td>
+            <input type="button" value="下一页" id="nextTo" />
+        </td>
+    </tr>
 
 </table>
 <style>
@@ -35,25 +46,44 @@
         cursor: auto;
         text-decoration: none;
     }
+    .lable{
+        
+    }
 </style>
 <script src="~/Scripts/jquery-1.10.2.js"></script>
 <script type="text/javascript">
-   
+
+    var isUpdatingPerUserList = false;
+
     $(function () {
-        setInterval(function () {
-            $.get('/PrinterModels/PerUserList', { "userAccount": "@Html.Raw(ViewBag.userAccount)" }, appTable);
-        }, 3000);
+        @*setInterval(function () {
+            if (!isUpdatingPerUserList) {
+                isUpdatingPerUserList = true;
+                $.post('/PrinterModels/PerUserList', { "userAccount": "@Html.Raw(ViewBag.userAccount)" }, appTable);
+            }
+        }, 3000);*@
 
 
         $("#print").click(function () {
             print();
         }
                    );
+
+        $("#upTo").click(function () {
+            isUpdatingPerUserList = true;
+            $.post('/PrinterModels/upToList', { "userAccount": "@Html.Raw(ViewBag.userAccount)" }, appTable);
+        });
+        $("#nextTo").click(function () {
+            isUpdatingPerUserList = true;
+            $.post('/PrinterModels/nextToList', { "userAccount": "@Html.Raw(ViewBag.userAccount)" }, appTable);
+        });
+
     })
 
     function appTable(content) {
         //$(".printInfo").remove();
-        $(".table").html(content);
+        $("#ptable").html(content);
+        isUpdatingPerUserList = false;
     };
 
     function pnumber(number) {
@@ -63,7 +93,7 @@
 
 
     function print() {
-        if($('#dataInfo').val()==""){
+        if ($('#dataInfo').val() == "") {
             alert("没有文件需要打印");
             return;
         }
@@ -120,13 +150,13 @@
         var reader = new FileReader();//这是核心,读取操作就是由它完成.
         //reader.readAsText(selectedFile);//读取文件的内容,也可以读取文件的URL
         //reader.readAsArrayBuffer(selectedFile);
-        reader.addEventListener("loadend",function (e) {
+        reader.addEventListener("loadend", function (e) {
             alert("huoqu");
             //当读取完成后回调这个函数,然后此时文件的内容存储到了result中,直接操作即可
             blob = b.dataURItoBlob(e.target.result);
         })
         reader.readAsDataURL(selectedFile);
     }
- 
+
 
 </script>

@@ -22,7 +22,12 @@
                 @Html.ValidationMessageFor(model => model.printerNumber, "", new { @class = "text-danger" })
             </div>
         </div>
-
+        <div class="form-group">
+            <label class="control-label col-md-2" >注册号范围</label>
+            <div class="col-md-10">
+                <input type="text" calss="form-control" name="maxPrinter">
+            </div>
+        </div>
         <div class="form-group">
             @Html.LabelFor(model => model.printerName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">

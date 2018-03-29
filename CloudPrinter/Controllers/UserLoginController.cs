@@ -42,6 +42,7 @@ namespace CloudPrinter.Controllers
                                 Response.Cookies.Add(cookieLogin);
                             }
                             Response.Cookies["LoginAccount"].Expires = DateTime.Now.AddHours(2);
+                            cookieLogin.Expires = DateTime.Now.AddHours(2);
                             if (userModels.userAccount.Equals(AdminInfo.ADMINACCOUNT))
                             {
                                 return RedirectToAction("Index", "UserModels");

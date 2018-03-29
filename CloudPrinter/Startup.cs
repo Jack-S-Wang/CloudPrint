@@ -11,9 +11,10 @@ namespace CloudPrinter
 {
     public partial class Startup
     {
-        private static tcpServer sertcp = new tcpServer();
+        private static tcpServer sertcp = null;
         public void Configuration(IAppBuilder app)
         {
+            sertcp = new tcpServer();
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ApplicationDbContext>());
             ConfigureAuth(app);
             var db = new ApplicationDbContext();

@@ -95,7 +95,7 @@ namespace CloudPrinter.TCPServer
                 catch (Exception ex)
                 {
                     var str = string.Format("异常信息{0}；追踪信息来源：{1}", ex, ex.StackTrace);
-                    errorStr += (str+"\r\n");
+                    errorStr += (str + "\r\n");
                 }
             }
             else
@@ -126,7 +126,7 @@ namespace CloudPrinter.TCPServer
             catch (Exception ex)
             {
                 string s = string.Format("{0}", ex);
-                errorStr +=( s + "\r\n");
+                errorStr += (s + "\r\n");
                 closeObject();
             }
             try
@@ -136,8 +136,8 @@ namespace CloudPrinter.TCPServer
             catch (Exception ex)
             {
                 string s = string.Format("{0}", ex);
-                errorStr +=( s + "\r\n");
-               
+                errorStr += (s + "\r\n");
+
                 closeObject();
             }
             try
@@ -163,16 +163,12 @@ namespace CloudPrinter.TCPServer
                 ti.Enabled = false;
                 ti.Close();
                 ti.Dispose();
-                //using (ApplicationDbContext db = new ApplicationDbContext())
-                //{
-                //    var printer = db.PrinterModels.FindAsync(new System.Threading.CancellationToken(), pwd.number);
-                //    if (printer != null)
-                //    {
-                //        printer.Result.mState = false;
-                //        db.Entry(printer.Result).State = EntityState.Modified;
-                //        db.SaveChangesAsync();
-                //    }
-                //}
+                if (pwd.printer != null)
+                {
+                    pwd.printer.Result.mState = false;
+                    pwd.db.Entry(pwd.printer.Result).State = EntityState.Modified;
+                    pwd.db.SaveChangesAsync();
+                }
                 TcpPrinter tp;
                 dicTcp.TryRemove(pwd.number, out tp);
                 int a;
@@ -235,7 +231,7 @@ namespace CloudPrinter.TCPServer
                 recice.RemoveRange(0, ConstNumber.HEADER_LENGTH + bodySize);
             }
         }
-       
+
         private void HreatPrinter(int bodySize)
         {
             byte[] StateData = new byte[bodySize];
@@ -248,7 +244,7 @@ namespace CloudPrinter.TCPServer
                     break;
                 case 1:
                     //设备先不解析
-                    //isBeatWife = true;
+                    isBeatWife = true;
                     break;
             }
         }
@@ -271,11 +267,11 @@ namespace CloudPrinter.TCPServer
                 bodys = bodys - (data[2] + 4);
                 byte[] dataNew = new byte[data[2]];
                 Array.Copy(data, 4, dataNew, 0, data[2]);
-                //int code = printerParse(dataNew);
-                //if (data[5] == 0x80)
-                //{
-                //    recode = code;//返回验证信息
-                //}
+                int code = printerParse(dataNew);
+                if (data[5] == 0x80)
+                {
+                    recode = code;//返回验证信息
+                }
 
                 if (bodys == 0)
                 {
@@ -320,31 +316,14 @@ namespace CloudPrinter.TCPServer
 
                     if (!isBeatWife)
                     {
-                        var date = DateTime.Now.ToString();
-                        int c = recode;
-                        string s = pwd.number;
-                        if (pwd.number.Equals("000AF92CE7010006"))
-                        {
-                            //using (FileStream file = new FileStream("C:\\项目程序\\readlog.txt", FileMode.OpenOrCreate))
-                            //{
-                            //    if (file.Length > 0)
-                            //    {
-                            //        file.SetLength(0);
-                            //        file.Seek(0, 0);
-                            //    }
-                            //    var err = Encoding.UTF8.GetBytes("超时关闭");
-                            //    file.Write(err, 0, err.Length);
-                            //}
-                        }
                         closeObject();
                         return;
                     }
                     else
                     {
-                        dateOld = DateTime.Now.ToString();
                         isBeatWife = false;
                         var hte = hreatSend();
-                       // MyBeginWrite(hte, 0, hte.Length);
+                        // MyBeginWrite(hte, 0, hte.Length);
                         stream.BeginWrite(hte, 0, hte.Length, WriteCallback, this);
                         //stream.BeginRead(buffer, 0, buffer.Length, ReadCallback, this);
                     }
@@ -353,7 +332,7 @@ namespace CloudPrinter.TCPServer
                 dicTcp.TryAdd(pwd.number, this);
             }
         }
-        string dateOld;
+
         /// <summary>
         /// 心跳发送
         /// </summary>
@@ -381,14 +360,16 @@ namespace CloudPrinter.TCPServer
                     hreatData[20] = 0x10;
                     hreatData[21] = 0x09;
                     hreatData[22] = 1;
-                    hreatData[23] = 1;
+                  
                     if (i == 0)
                     {
+                        hreatData[23] = 0x31;
                         hreatData[24] = 0x31;
                         Array.Copy(hreatData, hd, ConstNumber.HREAT_WRITE);
                     }
                     else
                     {
+                        hreatData[23] = 0x30;
                         hreatData[24] = 0x30;
                         Array.Copy(hreatData, 0, hd, ConstNumber.HREAT_WRITE, ConstNumber.HREAT_WRITE);
                     }
@@ -438,8 +419,8 @@ namespace CloudPrinter.TCPServer
             data[7] = (byte)(id >> 24);
             data[12] = ConstNumber.PRINT_CREATE;
             data[13] = 0;
-            new TcpDataPrintServer(pwd.number);
             stream.BeginWrite(data, 0, data.Length, WriteCallback, this);
+            new TcpDataPrintServer(pwd.number);
 
         }
 

@@ -33,26 +33,19 @@ namespace CloudPrinter.Controllers
             ViewBag.userAccount = userAccount;
             HttpCookie cookie = new HttpCookie("ToCount");
             cookie["count"] = "0";
-            
-            //if (Request.Cookies.Get("ToCount") != null)
-            //{
-            //    Response.Cookies.Set(cookie);
-            //}
-            //else
-            //{
-            //    Response.Cookies.Add(cookie);
-            //}
-            //Response.Cookies["ToCount"].Expires = DateTime.Now.AddHours(2);
+            if (Request.Cookies.Get("ToCount") != null)
+            {
+                Response.Cookies.Set(cookie);
+            }
+            else
+            {
+                Response.Cookies.Add(cookie);
+            }
+            Response.Cookies["ToCount"].Expires = DateTime.Now.AddHours(2);
             cookie.Expires = DateTime.Now.AddHours(2);
             Response.Cookies.Add(cookie);
             List<PrinterModels> li = new List<PrinterModels>();
-            for (int i = 0; i < 20; i++)
-            {
-                if (db.PrinterModels.ToList()[i].userAccount.Equals(userAccount))
-                {
-                    li.Add(db.PrinterModels.ToList()[i]);
-                }
-            }
+            li = db.PrinterModels.OrderBy(c => c.printerNumber).Skip(co * length).Take(length).ToList();
             return View(li);
         }
 
@@ -235,26 +228,18 @@ namespace CloudPrinter.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Account is Expire");
             }
             ViewBag.loginAccount = result;
+            ViewBag.superAccount = superAdmin.AdminInfo.ADMINACCOUNT;
             ViewBag.userAccount = userAccount;
 
             List<PrinterModels> li = new List<PrinterModels>();
             co = Int32.Parse(Request.Cookies.Get("ToCount").Values["count"]);
-            int newlength = 0;
-            if((co+1)*length> db.PrinterModels.ToList().Count)
+            try
             {
-                newlength = db.PrinterModels.ToList().Count;
-            }else
+                li = db.PrinterModels.OrderBy(c=>c.printerNumber).Skip(co * length).Take(length).ToList();
+            }catch(Exception ex)
             {
-                newlength = (co + 1) * length;
-            }
-            for (int i = co * length; i < newlength; i++)
-            {
-                if (db.PrinterModels.ToList()[i].userAccount.Equals(userAccount))
-                {
-                    li.Add(db.PrinterModels.ToList()[i]);
-                }
-            }
-
+                string s = string.Format("{0}", ex);
+            } 
             return PartialView("PerUserList", li);
         }
         [HttpPost]

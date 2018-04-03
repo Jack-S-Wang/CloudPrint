@@ -14,6 +14,8 @@ namespace CloudPrinter.TCPServer
     {
         public string number = "";
         public int printCache = 0;
+        public Task<PrinterModels> printer;
+        public ApplicationDbContext db = new ApplicationDbContext();
         //处理返回验证的信息码值，解析其他设备信息可以调用该方法获取
         public int wifeDevInfo(int count, byte[] parseData)
         {
@@ -58,41 +60,40 @@ namespace CloudPrinter.TCPServer
                 {
                     return 2;//信息获取失败
                 }
-                using (ApplicationDbContext db = new ApplicationDbContext())
+
+                //TransactionOptions transactionOption = new TransactionOptions();
+                ////设置事务隔离级别
+                //transactionOption.IsolationLevel = IsolationLevel.Snapshot;
+                ////设置事务超时时间，这里设置为1分钟
+                //transactionOption.Timeout = new TimeSpan(0, 1, 0);
+                //using (var scope = new TransactionScope(TransactionScopeOption.Required, transactionOption))
+                //{
+                printer = db.PrinterModels.FindAsync(new System.Threading.CancellationToken(), number);
+                if (printer != null)
                 {
-                    //TransactionOptions transactionOption = new TransactionOptions();
-                    ////设置事务隔离级别
-                    //transactionOption.IsolationLevel = IsolationLevel.Snapshot;
-                    ////设置事务超时时间，这里设置为1分钟
-                    //transactionOption.Timeout = new TimeSpan(0, 1, 0);
-                    //using (var scope = new TransactionScope(TransactionScopeOption.Required, transactionOption))
-                    //{
-                        var printer = db.PrinterModels.FindAsync(new System.Threading.CancellationToken(), number);
+                    if (printer.Result.mState)
+                    {
+                        return 3;//已经登录
+                    }
+                    else
+                    {
                         if (printer != null)
                         {
-                            if (printer.Result.mState)
-                            {
-                                return 3;//已经登录
-                            }
-                            else
-                            {
-                                if (printer != null)
-                                {
-                                    printer.Result.mState = true;
-                                    db.Entry(printer.Result).State = EntityState.Modified;
-                                    db.SaveChangesAsync();
-                                }
-                                return 0;//成功
-                            }
+                            printer.Result.mState = true;
+                            db.Entry(printer.Result).State = EntityState.Modified;
+                            db.SaveChangesAsync();
                         }
-                        else
-                        {
-                            return 1;//未注册
-                        }
-                    //}
+                        return 0;//成功
+                    }
                 }
+                else
+                {
+                    return 1;//未注册
+                }
+                //}
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 string s = string.Format("{0}", ex);
                 return 4;//其他错误未定义
@@ -111,18 +112,17 @@ namespace CloudPrinter.TCPServer
                 {
                     if (data[20] == 1)
                     {
-                        using (ApplicationDbContext db = new ApplicationDbContext())
+
+
+                        //接受缓存已满
+                        if (printer != null)
                         {
-                            var printer = db.PrinterModels.FindAsync(new System.Threading.CancellationToken(), number);
-                            //接受缓存已满
-                            if (printer != null)
-                            {
-                                printer.Result.cState = "error";
-                                printer.Result.stateMessage = "缓存已满";
-                                db.Entry(printer.Result).State = EntityState.Modified;
-                                db.SaveChangesAsync();
-                            }
+                            printer.Result.cState = "error";
+                            printer.Result.stateMessage = "缓存已满";
+                            db.Entry(printer.Result).State = EntityState.Modified;
+                            db.SaveChangesAsync();
                         }
+
                         if (SharData.dicSharData.ContainsKey(number))
                         {
                             int a;
@@ -153,18 +153,15 @@ namespace CloudPrinter.TCPServer
                             //获取数据流状态信息
                             if (data[6] == 1)
                             {
-                                using (ApplicationDbContext db = new ApplicationDbContext())
+                                //接受缓存已满
+                                if (printer != null)
                                 {
-                                    var printer = db.PrinterModels.FindAsync(new System.Threading.CancellationToken(), number);
-                                    //接受缓存已满
-                                    if (printer != null)
-                                    {
-                                        printer.Result.cState = "error";
-                                        printer.Result.stateMessage = "缓存已满";
-                                        db.Entry(printer.Result).State = EntityState.Modified;
-                                        db.SaveChangesAsync();
-                                    }
+                                    printer.Result.cState = "error";
+                                    printer.Result.stateMessage = "缓存已满";
+                                    db.Entry(printer.Result).State = EntityState.Modified;
+                                    db.SaveChangesAsync();
                                 }
+
                                 if (SharData.dicSharData.ContainsKey(number))
                                 {
                                     int a;
@@ -187,7 +184,8 @@ namespace CloudPrinter.TCPServer
                     }
                 }
                 return flge;
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 string s = string.Format("{0}", ex);
                 return false;

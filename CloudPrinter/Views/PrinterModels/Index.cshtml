@@ -46,9 +46,7 @@
         cursor: auto;
         text-decoration: none;
     }
-    .lable{
-        
-    }
+  
 </style>
 <script src="~/Scripts/jquery-1.10.2.js"></script>
 <script type="text/javascript">
@@ -56,12 +54,12 @@
     var isUpdatingPerUserList = false;
 
     $(function () {
-        @*setInterval(function () {
+        setInterval(function () {
             if (!isUpdatingPerUserList) {
                 isUpdatingPerUserList = true;
                 $.post('/PrinterModels/PerUserList', { "userAccount": "@Html.Raw(ViewBag.userAccount)" }, appTable);
             }
-        }, 3000);*@
+        }, 3000);
 
 
         $("#print").click(function () {
@@ -151,7 +149,6 @@
         //reader.readAsText(selectedFile);//读取文件的内容,也可以读取文件的URL
         //reader.readAsArrayBuffer(selectedFile);
         reader.addEventListener("loadend", function (e) {
-            alert("huoqu");
             //当读取完成后回调这个函数,然后此时文件的内容存储到了result中,直接操作即可
             blob = b.dataURItoBlob(e.target.result);
         })

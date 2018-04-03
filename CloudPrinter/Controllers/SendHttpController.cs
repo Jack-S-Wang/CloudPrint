@@ -1,4 +1,5 @@
 ﻿using CloudPrinter.Models;
+using CloudPrinter.SharClass;
 using CloudPrinter.TCPServer;
 using System;
 using System.Collections.Generic;
@@ -19,18 +20,24 @@ namespace CloudPrinter.Controllers
         [HttpPost]
         public string printData()
         {
+            string printerNumber = "";
             try
             {
+                PDFToImage pdf = new PDFToImage();
+                DataComd dc = new DataComd();
                 var httpRequest = HttpContext.Current.Request;
-                string printerNumber = httpRequest.Form["printerNumber"] as string;  // 获取 FormData的键值 
+                printerNumber = httpRequest.Form["printerNumber"] as string;  // 获取 FormData的键值 
                 var file = httpRequest.Files[0];
                 var printDt = new byte[file.InputStream.Length];
                 file.InputStream.Read(printDt, 0, printDt.Length);
-
+                //将pdf进行转化为图片
+                byte[] imgData=pdf.getBitmap(printDt);
+                int width = pdf.getBitmapWidth();
+                byte[] dataComd = dc.reComdData(imgData,width);
                 if (TcpPrinter.dicTcp.ContainsKey(printerNumber))
                 {
                     List<byte> li = new List<byte>();
-                    li.AddRange(printDt);
+                    li.AddRange(dataComd);
                     if (SharData.dicByteData.ContainsKey(printerNumber))
                     {
                         return "该设备正繁忙中！";
@@ -56,20 +63,21 @@ namespace CloudPrinter.Controllers
                     return "设备已离线！";
                 }
             }
-            catch
+            catch(Exception ex)
             {
-                //if (SharData.dicByteData.ContainsKey(printerNumber))
-                //{
-                //    List<byte> b;
-                //    SharData.dicByteData.TryRemove(printerNumber, out b);
-                //}
-                //if (SharData.dicHttp.ContainsKey(printerNumber))
-                //{
-                //    SendHttpController s;
-                //    SharData.dicHttp.TryRemove(printerNumber, out s);
-                //}
-                return "请求协议出现异常";
+                if (SharData.dicByteData.ContainsKey(printerNumber))
+                {
+                    List<byte> b;
+                    SharData.dicByteData.TryRemove(printerNumber, out b);
+                }
+                if (SharData.dicHttp.ContainsKey(printerNumber))
+                {
+                    SendHttpController s;
+                    SharData.dicHttp.TryRemove(printerNumber, out s);
+                }
+                return "请求协议出现异常:"+string.Format("{0}",ex);
             }
+           
         }
 
     }

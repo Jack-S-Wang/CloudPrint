@@ -69,7 +69,6 @@ namespace CloudPrinter.TCPServer
             }
            
         }
-        int dd = 0;
         /// <summary>
         /// 发送验证number值
         /// </summary>
@@ -89,7 +88,6 @@ namespace CloudPrinter.TCPServer
             data[11] = (byte)(len >> 24);
             data[12] = ConstNumber.PARSE_NUMBER;
             data[13] = 0;
-            dd = 1;
             streamData.BeginWrite(data, 0, data.Length, WriteCallback, this);
         }
         /// <summary>
@@ -247,7 +245,6 @@ namespace CloudPrinter.TCPServer
             data[12] = ConstNumber.PRINT_INDEX;
             data[13] = 0;
             Array.Copy(dataP, 0, data, ConstNumber.HEADER_LENGTH, pLen);
-            dd = 2;
             streamData.BeginWrite(data, 0, data.Length, WriteCallback, this);
             printRecide.RemoveRange(0, pLen);
             return false;
@@ -267,7 +264,6 @@ namespace CloudPrinter.TCPServer
             data[7] = (byte)(id >> 24);
             data[12] = ConstNumber.PRINT_INDEX;
             data[13] = 0;
-            dd = 3;
             streamData.BeginWrite(data, 0, ConstNumber.HEADER_LENGTH, WriteCallback, this);
         }
         /// <summary>

@@ -19,7 +19,7 @@ namespace CloudPrinter.TCPServer
             {
                 return;
             }
-            tcplist = new TcpListener(IPAddress.Parse("192.168.11.130"), 5678);
+            tcplist = new TcpListener(IPAddress.Parse("192.168.136.1"), 5678);
             tcplist.Start();
             new Thread(o =>
             {

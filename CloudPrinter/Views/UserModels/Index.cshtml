@@ -10,6 +10,9 @@
     @Html.ActionLink("创建新账户", "Create") |
     @Html.ActionLink("注册新打印机", "Create","PrinterModels",new { userAccount=ViewBag.loginAccount},"")
 </p>
+<div>
+    <input class="auto" name="userAccoount" data-autocomplete-id=@Url.Action("Index")/>
+</div>
 <table class="table">
     <tr>
         <th>
@@ -50,3 +53,12 @@
 }
 
 </table>
+@*<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+<script>
+    var option = {
+        source: $(".auto").attr("data-autocomplete-id")
+    };
+    $(".auto").autocomplete(option);
+</script>*@

@@ -14,7 +14,7 @@ namespace CloudPrinter.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
         int length = 20;
-       
+
         // GET: PrinterModels/5
         public ActionResult Index(string userAccount)
         {
@@ -235,11 +235,12 @@ namespace CloudPrinter.Controllers
             co = Int32.Parse(Request.Cookies.Get("ToCount").Values["count"]);
             try
             {
-                li = db.PrinterModels.OrderBy(c=>c.printerNumber).Skip(co * length).Take(length).ToList();
-            }catch(Exception ex)
+                li = db.PrinterModels.OrderBy(c => c.printerNumber).Skip(co * length).Take(length).ToList();
+            }
+            catch (Exception ex)
             {
                 string s = string.Format("{0}", ex);
-            } 
+            }
             return PartialView("PerUserList", li);
         }
         [HttpPost]
@@ -253,11 +254,11 @@ namespace CloudPrinter.Controllers
                 {
                     co = Int32.Parse(s) - 1;
                 }
-                    cookie.Values["count"] = co.ToString();
-                    //Response.Cookies.Set(cookie);
-                    //Response.Cookies["ToCount"].Expires = DateTime.Now.AddHours(2);
-                    cookie.Expires = DateTime.Now.AddHours(2);
-                    Response.Cookies.Set(cookie);
+                cookie.Values["count"] = co.ToString();
+                //Response.Cookies.Set(cookie);
+                //Response.Cookies["ToCount"].Expires = DateTime.Now.AddHours(2);
+                cookie.Expires = DateTime.Now.AddHours(2);
+                Response.Cookies.Set(cookie);
             }
             return PerUserList(userAccount);
         }
@@ -271,10 +272,11 @@ namespace CloudPrinter.Controllers
                 {
                     string s = cookie.Values["count"];
                     int con = db.PrinterModels.ToList().Count % 20 > 0 ? (db.PrinterModels.ToList().Count / 20) + 1 : db.PrinterModels.ToList().Count / 20;
-                    if (Int32.Parse(s) <con )
+                    if (Int32.Parse(s) < con)
                     {
                         co = Int32.Parse(s) + 1;
-                    }else
+                    }
+                    else
                     {
                         co = Int32.Parse(s);
                     }
@@ -285,7 +287,7 @@ namespace CloudPrinter.Controllers
                     Response.Cookies.Set(cookie);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 string s = string.Format("{0}", ex);
             }

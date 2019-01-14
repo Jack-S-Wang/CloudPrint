@@ -183,8 +183,6 @@ namespace CloudPrinter.TCPServer
                     var data = Encoding.UTF8.GetBytes(errorStr);
                     file.Write(data, 0, data.Length);
                 }
-                //var thread = Thread.CurrentThread;
-                //thread.Abort();
             }
             catch (Exception ex)
             {

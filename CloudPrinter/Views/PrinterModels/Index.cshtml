@@ -20,10 +20,9 @@
     <input type="button" id="fileImport" value="导入">
     <input type="submit" value="打印" id="print" />
 </div>
-<table class="table" id="ptable">
 
+<table class="table" id="ptable">
     @Html.Partial("PerUserList")
-   
 </table>
 <table class="table">
     <tr>
@@ -46,7 +45,6 @@
         cursor: auto;
         text-decoration: none;
     }
-  
 </style>
 <script src="~/Scripts/jquery-1.10.2.js"></script>
 <script type="text/javascript">
@@ -128,8 +126,7 @@
             dataURItoBuffer: function (dataURI) {
                 var byteString = atob(dataURI.split(',')[1])
                     , buffer = new ArrayBuffer(byteString.length)
-                    , view = new Uint8Array(buffer)
-                ;
+                    , view = new Uint8Array(buffer);
                 for (var i = 0; i < byteString.length; i++) {
                     view[i] = byteString.charCodeAt(i);
                 }
